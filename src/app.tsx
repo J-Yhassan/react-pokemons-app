@@ -1,43 +1,30 @@
-import React,   {FunctionComponent, useEffect, useState} from 'react';
-import POKEMONS from './models/mock-pokemons';
-import Pokemon from './models/pokemon';
+import React,   {FunctionComponent} from 'react';
+import PokemonList from './pages/pokemon-list';
+import { Link ,BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import PokemonsDetail from './pages/pokemon-detail';
+import PageNotFound from './pages/page-not-found';
 
-const App: FunctionComponent = ()=>{// un composant écrit sous forme de fonction
-const [name] = useState<String>('Pokedex');
-//const [pokemons] = useState<Pokemon[]>(POKEMONS);//créee un state pour gérer les pokemons
-const [pokemons ,setPokemon] = useState<Pokemon[]>([]);//initialiser le state pour le hook
-useEffect(()=>{// le hook d'effet
-    setPokemon(POKEMONS);
-},[]);
+const App: FunctionComponent = () =>{// un composant écrit sous forme de fonction
 
-//gestion des intéractions
-const showPokemonsCount = ()=>{
-    console.log("il y a ", pokemons.length, "pokemons");
-}
     return(
-    <div>
-        <h1 className= "center">{name}</h1>
-        <p onClick={showPokemonsCount}>vous avez {pokemons.length} pokemon !</p>
-        <div className="container">
-            {pokemons.map(({name, picture, created, id})=>(
-               <div className="col s6 m4" key={id}>
-                   <div className= "card horizental">
-                        
-                        <div className= "card-image">
-                            <img src={picture} alt={name} />
-                        </div>
-                        <div className= "card-content">
-                                <p>{name}</p>
-                                <p>{created.toDateString()}</p>
-                        </div>
-                      </div>  
-               </div>
-                   
-               ))}
-            
-        </div>    
-    </div>
-    )
+        <Router>
+        <div>
+        {/*la barre de navigation commun a toute les pages*/}
+            <nav>
+                <div>
+                <Link to="/" className="brand-logo center">Acceuil</Link>
+                </div>
+            </nav>
+            {/*le système de gestion des routes de notre application*/}
+            <Switch>
+                <Route exact path="/" component={PokemonList} />
+                <Route exact path="/pokemons" component={PokemonList} />
+                <Route  path="/pokemons/:id" component={PokemonsDetail} />
+                <Route component={PageNotFound}/>
+            </Switch>
+        </div>
+        </Router>
+    );
 }
 
 export default App;
