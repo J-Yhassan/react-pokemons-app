@@ -2,9 +2,11 @@ import React, { FunctionComponent, useState } from 'react';
 import Pokemon from '../models/pokemon';
 import formatType from '../helpers/format-type';
 import {useHistory} from 'react-router-dom'
+import PokemonService from '../services/pokemon-service';
   
 type Props = {
-  pokemon: Pokemon
+  pokemon: Pokemon,
+  isEditForm:boolean
 };
 //modeliser un champs dans un formulaire
 type Field = { 
@@ -14,19 +16,21 @@ type Field = {
 };
 
 type Form = {
+    picture: Field,
     name: Field,
     hp:Field,
     cp:Field,
     types: Field
 };
 
-const PokemonForm: FunctionComponent<Props> = ({pokemon}) => {
+const PokemonForm: FunctionComponent<Props> = ({pokemon, isEditForm}) => {
     //définir les champs du formulaire edit
     const [form, setForm] = useState<Form>({
-        name: {value: pokemon.name, isValid:true},
-        hp: {value: pokemon.hp, isValid:true},
-        cp: {value: pokemon.cp, isValid:true},
-        types: {value: pokemon.types, isValid:true}
+      picture: {value: pokemon.picture}, 
+      name: {value: pokemon.name, isValid:true}, 
+      hp: {value: pokemon.hp, isValid:true},
+      cp: {value: pokemon.cp, isValid:true},
+      types: {value: pokemon.types, isValid:true}
     }); 
 
   const history = useHistory();
@@ -67,15 +71,30 @@ const PokemonForm: FunctionComponent<Props> = ({pokemon}) => {
 const handleSubmit = (e: React.FormEvent<HTMLFormElement>) =>{
     e.preventDefault();
     const isFormValid = validateForm();
-   // console.log(form);
+
    if(isFormValid){
-    history.push(`/pokemons/${pokemon.id}`);
+    pokemon.name = form.name.value;
+    pokemon.hp = form.hp.value;
+    pokemon.cp = form.cp.value;
+    pokemon.types = form.types.value;
+    PokemonService.updatePokemon(pokemon)
+    .then(()=>history.push(`/pokemons/${pokemon.id}`));
     }
+}
+
+const isAddForm = ()=>{
+  return !isEditForm;
 }
 
 const validateForm = () => {
     let newForm: Form = form;
     
+    //validator url
+    if(isAddForm()){
+      const start = "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/";
+      const end = ".png";
+    }
+
     // Validator name
     if(!/^[a-zA-Zàéè ]{3,25}$/.test(form.name.value)) {
       const errorMsg: string = 'Le nom du pokémon est requis (1-25).';
@@ -123,6 +142,11 @@ const validateForm = () => {
     return true
   }
 
+  const deletePokemon = () =>{
+    PokemonService.deletePokemon(pokemon)
+    .then(() => history.push(`/pokemons`));
+  }
+
   return (
     <form onSubmit= {e => handleSubmit(e)}>
       <div className="row">
@@ -130,6 +154,9 @@ const validateForm = () => {
           <div className="card hoverable"> 
             <div className="card-image">
               <img src={pokemon.picture} alt={pokemon.name} style={{width: '250px', margin: '0 auto'}}/>
+              <span className="btn-floating halfway-fab waves-effect waves-light">
+                <i onClick={deletePokemon} className="material-icons">delete</i>
+              </span>
             </div>
             <div className="card-stacked">
               <div className="card-content">
