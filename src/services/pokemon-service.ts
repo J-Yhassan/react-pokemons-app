@@ -36,8 +36,8 @@ export default class PokemonService {
 }
 
 //methode d'ajout d'élément
-static postPokemon(pokemon: Pokemon): Promise<Pokemon>{
-  
+static addPokemon(pokemon: Pokemon): Promise<Pokemon>{
+  delete pokemon.created;
 
   return fetch(`http://localhost:3001/pokemons`,{
     method: 'POST',
