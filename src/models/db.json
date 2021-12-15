@@ -7,8 +7,7 @@
       "cp": "50",
       "picture": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/001.png",
       "types": [
-        "Plante",
-        "Poison"
+        "Plante"
       ]
     },
     {
@@ -139,10 +138,11 @@
       "id": 1639519490616,
       "hp": 100,
       "cp": 10,
-      "name": "surprise",
+      "name": "surprisee",
       "picture": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/100.png",
       "types": [
-        "Normal"
+        "Normal",
+        "Electrik"
       ]
     }
   ]

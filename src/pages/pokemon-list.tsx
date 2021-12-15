@@ -4,6 +4,7 @@ import PokemonService from '../services/pokemon-service';
 import Pokemon from '../models/pokemon';
 //import POKEMONS from '../models/mock-pokemons';
 import PokemonCard from '../components/pokemon-card';
+import PokemonSearch from '../components/pokemon-search';
 
   
 const PokemonList: FunctionComponent = () => {
@@ -18,6 +19,7 @@ const PokemonList: FunctionComponent = () => {
       <h1 className="center">Pokédex</h1>
       <div className="container"> 
         <div className="row">
+          <PokemonSearch/>
           {pokemons.map(pokemon => (
             <PokemonCard key={pokemon.id} pokemon={pokemon}/>
           ))}
